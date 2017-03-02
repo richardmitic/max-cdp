@@ -5,10 +5,6 @@
 #include "cdp.h"
 #include "cdptask.h"
 #include "cdpprogram.h"
-#include "cdp_methods.h"
-#include "cdp_domethods.h"
-#include "class_methods.h"
-#include "class_domethods.h"
 
 
 void cdp_anything(t_cdp *x, t_symbol *s, long ac, t_atom *av);
@@ -38,15 +34,8 @@ void ext_main(void *r)
   class_addmethod(c, (method)cdp_listprograms, "listprograms", 0);
   class_addmethod(c, (method)cdp_anything,     "anything",     A_GIMME, 0);
   
-  
-  // TODO: Adding class methods with a macro seems pretty sketchy. Find a better way.
-//  CLASS_ADD_CDP_METHODS(c);
-  
 	// methods which we use internally. they all have A_GIMME style signature
-//  CLASS_ADD_CDP_DO_METHODS(c);
-  
   class_addmethod(c, (method)cdp_docdp,    "docpd",    A_GIMME, 0);
-  
 	class_addmethod(c, (method)cdp_taskcomplete, "taskcomplete", A_GIMME, 0);
 	class_addmethod(c, (method)cdp_taskoutput,   "taskoutput",   A_GIMME, 0);
 
@@ -69,7 +58,7 @@ void ext_main(void *r)
  execute it.
  
  Allocate a new set of atoms comprising the CDP program name and arguments.
- The allocated memory will be used in another thread and must be freed in taskcomplete.
+ The allocated memory will be used in another thread and must be freed in cdp_taskcomplete().
  */
 void cdp_anything(t_cdp *x, t_symbol *s, long ac, t_atom *av)
 {

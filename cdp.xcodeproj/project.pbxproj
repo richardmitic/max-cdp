@@ -14,10 +14,7 @@
 		796BCF131E64E16D00F58068 /* process_osx.h in Headers */ = {isa = PBXBuildFile; fileRef = 796BCF111E64E16D00F58068 /* process_osx.h */; };
 		796BCF171E65FF4E00F58068 /* cdpprogram.c in Sources */ = {isa = PBXBuildFile; fileRef = 796BCF151E65FF4D00F58068 /* cdpprogram.c */; };
 		796BCF181E65FF4E00F58068 /* cdpprogram.h in Headers */ = {isa = PBXBuildFile; fileRef = 796BCF161E65FF4D00F58068 /* cdpprogram.h */; };
-		796BCF1E1E6764EC00F58068 /* generated_headers in Resources */ = {isa = PBXBuildFile; fileRef = 796BCF1D1E6764EC00F58068 /* generated_headers */; };
 		796BCF241E67820F00F58068 /* generated_sources in Resources */ = {isa = PBXBuildFile; fileRef = 796BCF231E67820F00F58068 /* generated_sources */; };
-		796BCF2A1E67851900F58068 /* cdp_domethods_impl.c in Sources */ = {isa = PBXBuildFile; fileRef = 796BCF281E67851900F58068 /* cdp_domethods_impl.c */; };
-		796BCF2B1E67851900F58068 /* cdp_methods_impl.c in Sources */ = {isa = PBXBuildFile; fileRef = 796BCF291E67851900F58068 /* cdp_methods_impl.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -31,10 +28,7 @@
 		796BCF151E65FF4D00F58068 /* cdpprogram.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = cdpprogram.c; sourceTree = "<group>"; };
 		796BCF161E65FF4D00F58068 /* cdpprogram.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cdpprogram.h; sourceTree = "<group>"; };
 		796BCF1A1E6602A000F58068 /* cdp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = cdp.h; sourceTree = "<group>"; };
-		796BCF1D1E6764EC00F58068 /* generated_headers */ = {isa = PBXFileReference; lastKnownFileType = folder; path = generated_headers; sourceTree = "<group>"; };
 		796BCF231E67820F00F58068 /* generated_sources */ = {isa = PBXFileReference; lastKnownFileType = folder; name = generated_sources; path = "/Users/richard/Developer/max-sdk/source/advanced/cdp/generated_sources"; sourceTree = "<absolute>"; };
-		796BCF281E67851900F58068 /* cdp_domethods_impl.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = cdp_domethods_impl.c; sourceTree = "<group>"; };
-		796BCF291E67851900F58068 /* cdp_methods_impl.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = cdp_methods_impl.c; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,8 +54,6 @@
 				438B6FF612A3BBE400CE4FFE /* cdptask.c */,
 				438B6FF812A3BBEE00CE4FFE /* cdptask.h */,
 				19C28FB4FE9D528D11CA2CBB /* Products */,
-				796BCF271E67851900F58068 /* generated_sources */,
-				796BCF1D1E6764EC00F58068 /* generated_headers */,
 			);
 			name = iterator;
 			sourceTree = "<group>";
@@ -81,15 +73,6 @@
 				796BCF111E64E16D00F58068 /* process_osx.h */,
 			);
 			name = os;
-			sourceTree = "<group>";
-		};
-		796BCF271E67851900F58068 /* generated_sources */ = {
-			isa = PBXGroup;
-			children = (
-				796BCF281E67851900F58068 /* cdp_domethods_impl.c */,
-				796BCF291E67851900F58068 /* cdp_methods_impl.c */,
-			);
-			path = generated_sources;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -159,7 +142,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				796BCF1E1E6764EC00F58068 /* generated_headers in Resources */,
 				796BCF241E67820F00F58068 /* generated_sources in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -181,11 +163,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				796BCF2B1E67851900F58068 /* cdp_methods_impl.c in Sources */,
 				796BCF171E65FF4E00F58068 /* cdpprogram.c in Sources */,
 				438B6FF512A3BB9B00CE4FFE /* cdp.c in Sources */,
 				438B6FF712A3BBE400CE4FFE /* cdptask.c in Sources */,
-				796BCF2A1E67851900F58068 /* cdp_domethods_impl.c in Sources */,
 				796BCF121E64E16D00F58068 /* process_osx.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
