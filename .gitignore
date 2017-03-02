@@ -1,0 +1,6 @@
+# osx
+.DS_Store
+
+# generated files
+generated_headers
+generated_sources
