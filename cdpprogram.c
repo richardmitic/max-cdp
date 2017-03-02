@@ -6,6 +6,7 @@
 //
 //
 
+#include <string.h>
 #include "cdpprogram.h"
 #include "ext.h"
 #include "ext_obex.h"
@@ -100,6 +101,14 @@ void cdp_do_program(t_cdp *x, char *program, long ac, t_atom *av)
   
   if (cmd)
     object_free(cmd);
+}
+
+
+char *get_filename_ext(char *filename)
+{
+  char *dot = strrchr(filename, '.');
+  if(!dot || dot == filename) return "";
+  return dot + 1;
 }
 
 

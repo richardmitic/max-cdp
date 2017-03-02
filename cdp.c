@@ -21,6 +21,7 @@ void cdp_free(t_cdp *x);
 void *cdp_new(t_symbol *s, long ac, t_atom *av);
 
 
+
 t_class *cdp_class;
 
 
@@ -31,6 +32,7 @@ void ext_main(void *r)
 	c = class_new("cdp", (method)cdp_new, (method)cdp_free, sizeof(t_cdp), 0L, A_GIMME, 0);
 
 	class_addmethod(c, (method)cdp_cancel,       "cancel",       0);
+  class_addmethod(c, (method)cdp_listprograms, "listprograms", 0);
   
   // TODO: Adding class methods with a macro seems pretty sketchy. Find a better way.
   CLASS_ADD_CDP_METHODS(c);
@@ -56,7 +58,22 @@ void ext_main(void *r)
 
 void cdp_listprograms(t_cdp *x)
 {
+  char full_path[MAX_PATH_CHARS];
+  char filename[MAX_FILENAME_CHARS];
+  short path_id = 0;
+  void *dir;
+  t_fourcc filetype;
   
+  if (!cdp_find_excutable(x, "filter", &path_id, full_path)) {
+    dir = path_openfolder(path_id);
+    while(path_foldernextfile(dir, &filetype, filename, 0)) {
+      if (strcmp(get_filename_ext(filename), "sh")) // ignore shell scripts
+        post("%s", filename);
+    }
+    path_closefolder(dir);
+  } else {
+    object_error((t_object*)x, "Could not locate CDP programs");
+  }
 }
 
 
