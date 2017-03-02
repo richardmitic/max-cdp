@@ -24,14 +24,18 @@ t_max_err cdp_find_excutable(t_cdp *x, char *name, short *path, char *full_path)
   
   strcpy(tmp, x->cdp_path->s_name);
   
+  // TODO: Simplify this logic
+  
   // If user has specifed a location, look for it and use it if it exists.
   // Else, look in the Max search path.
   if (x->cdp_path && x->cdp_path != gensym("") && !locatefile_extended(tmp, path, &type, NULL, 0)) {
-    err = path_toabsolutesystempath(*path, name, full_path);
+    // User has defined a CDP root and it exists. Now check for executable.
+    err = path_topathname(*path, name, full_path);
   } else {
+    // No CPD root defined. Check Max's search path.
     err = locatefile_extended(name, path, &type, NULL, 0);
     if (!err) {
-      err = path_toabsolutesystempath(path, name, full_path);
+      err = path_topathname(*path, name, full_path);
     }
   }
   
