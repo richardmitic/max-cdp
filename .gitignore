@@ -1,5 +1,8 @@
-# osx
+# osx / xcode
 .DS_Store
+build
+*.xcodeproj/*
+!*.xcodeproj/project.pbxproj
 
 # generated files
 generated_headers
