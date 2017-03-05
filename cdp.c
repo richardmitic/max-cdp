@@ -61,7 +61,6 @@ void ext_main(void *r)
  execute it.
  
  Allocate a new set of atoms comprising the CDP program name and arguments.
- The allocated memory will be used in another thread and must be freed in cdp_taskcomplete().
  */
 void cdp_anything(t_cdp *x, t_symbol *s, long ac, t_atom *av)
 {
@@ -77,6 +76,9 @@ void cdp_anything(t_cdp *x, t_symbol *s, long ac, t_atom *av)
                            (t_object *)x,gensym("taskcomplete"),ac_command,av_command,
                            NULL,0);
   }
+
+  if (av_command)
+    sysmem_freeptr(av_command);
 }
 
 
@@ -158,10 +160,6 @@ void cdp_taskcomplete(t_cdp *x, t_symbol *s, long ac, t_atom *av)
 
   if (tmpstr)
     sysmem_freeptr(tmpstr);
-  
-  // We allocated this memory in cdp_anything. Free it now we're definitely finished.
-  if (av)
-    sysmem_freeptr(av);
 }
 
 void cdp_taskoutput(t_cdp *x, t_symbol *s, long ac, t_atom *av)
