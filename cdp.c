@@ -29,29 +29,29 @@ t_class *cdp_class;
 
 void ext_main(void *r)
 {
-	t_class *c;
+  t_class *c;
 
-	c = class_new("cdp", (method)cdp_new, (method)cdp_free, sizeof(t_cdp), 0L, A_GIMME, 0);
+  c = class_new("cdp", (method)cdp_new, (method)cdp_free, sizeof(t_cdp), 0L, A_GIMME, 0);
 
-	class_addmethod(c, (method)cdp_cancel,       "cancel",       0);
+  class_addmethod(c, (method)cdp_cancel,       "cancel",       0);
   class_addmethod(c, (method)cdp_listprograms, "listprograms", 0);
   class_addmethod(c, (method)cdp_anything,     "anything",     A_GIMME, 0);
   
-	// methods which we use internally. they all have A_GIMME style signature
+  // methods which we use internally. they all have A_GIMME style signature
   class_addmethod(c, (method)cdp_docdp,        "docpd",        A_GIMME, 0);
-	class_addmethod(c, (method)cdp_taskcomplete, "taskcomplete", A_GIMME, 0);
-	class_addmethod(c, (method)cdp_taskoutput,   "taskoutput",   A_GIMME, 0);
+  class_addmethod(c, (method)cdp_taskcomplete, "taskcomplete", A_GIMME, 0);
+  class_addmethod(c, (method)cdp_taskoutput,   "taskoutput",   A_GIMME, 0);
 
-	class_addmethod(c, (method)cdp_assist,       "assist",       A_CANT, 0);
+  class_addmethod(c, (method)cdp_assist,       "assist",       A_CANT, 0);
   
   // Attributes
   CLASS_ATTR_SYM(c, "root", 0, t_cdp, cdp_path);
   CLASS_ATTR_LABEL(c, "root", 0, "CDP directory");
 
-	class_register(CLASS_BOX,c);
-	cdp_class = c;
+  class_register(CLASS_BOX,c);
+  cdp_class = c;
 
-	cdptask_init(); // initialze one global background task thread pool for all of our objects
+  cdptask_init(); // initialze one global background task thread pool for all of our objects
 }
 
 
@@ -117,14 +117,26 @@ void cdp_listprograms(t_cdp *x)
   short path_id = 0;
   void *dir;
   t_fourcc filetype;
+  t_atom a;
+  t_atomarray *aa;
+  long ac;
+  t_atom *av;
   
-  if (!cdp_find_excutable(x, "filter", &path_id, full_path)) {
+  aa = atomarray_new(0, NULL);
+
+  if (aa && !cdp_find_excutable(x, "filter", &path_id, full_path)) {
     dir = path_openfolder(path_id);
     while(path_foldernextfile(dir, &filetype, filename, 0)) {
       if (strcmp(get_filename_ext(filename), "sh")) // ignore shell scripts
-        post("%s", filename);
+      {
+        atom_setsym(&a, gensym(filename));
+        atomarray_appendatom(aa, &a);
+      }
     }
     path_closefolder(dir);
+    atomarray_getatoms(aa, &ac, &av);
+    defer_low(x, (method)cdp_taskoutput, gensym("listprograms"), ac, av);
+    object_free(aa);
   } else {
     object_error((t_object*)x, "Could not locate CDP programs");
   }
@@ -133,20 +145,20 @@ void cdp_listprograms(t_cdp *x)
 
 void cdp_taskcomplete(t_cdp *x, t_symbol *s, long ac, t_atom *av)
 {
-	long textsize=0;
-	char *tmpstr=NULL;
-	// our completion method will be called from our bakground thread
-	// we cannot output to a patcher from this thread (ILLEGAL)
-	// so we must defer or schedule output to the patcher
+  long textsize=0;
+  char *tmpstr=NULL;
+  // our completion method will be called from our bakground thread
+  // we cannot output to a patcher from this thread (ILLEGAL)
+  // so we must defer or schedule output to the patcher
 
-	atom_gettext(ac,av,&textsize,&tmpstr,0);
-	post("cdp background task (%s) completed in thread %x",tmpstr,systhread_self());
+  atom_gettext(ac,av,&textsize,&tmpstr,0);
+  post("cdp background task (%s) completed in thread %x",tmpstr,systhread_self());
 
-	defer_low(x, (method)cdp_taskoutput, gensym("taskoutput"), ac, av);
-	//schedule_delay(x,(method)cdp_taskoutput,gensym("taskoutput"),ac,av);
+  defer_low(x, (method)cdp_taskoutput, gensym("taskoutput"), ac, av);
+  //schedule_delay(x,(method)cdp_taskoutput,gensym("taskoutput"),ac,av);
 
-	if (tmpstr)
-		sysmem_freeptr(tmpstr);
+  if (tmpstr)
+    sysmem_freeptr(tmpstr);
   
   // We allocated this memory in cdp_anything. Free it now we're definitely finished.
   if (av)
@@ -155,45 +167,45 @@ void cdp_taskcomplete(t_cdp *x, t_symbol *s, long ac, t_atom *av)
 
 void cdp_taskoutput(t_cdp *x, t_symbol *s, long ac, t_atom *av)
 {
-	outlet_anything(x->x_outlet, s, ac, av);
+  outlet_anything(x->x_outlet, s, ac, av);
 }
 
 void cdp_cancel(t_cdp *x)
 {
-	cdp_stop(x);
-	outlet_anything(x->x_outlet,gensym("cancelled"), 0, NULL);
+  cdp_stop(x);
+  outlet_anything(x->x_outlet,gensym("cancelled"), 0, NULL);
 }
 
 void cdp_stop(t_cdp *x)
 {
-	// stop all tasks associated with my object if they are still present
-	cdptask_purge_object((t_object *)x);
+  // stop all tasks associated with my object if they are still present
+  cdptask_purge_object((t_object *)x);
 }
 
 void cdp_assist(t_cdp *x, void *b, long m, long a, char *s)
 {
-	if (m==1)
-		sprintf(s,"make a new task");
-	else if (m==2)
-		sprintf(s,"report when done/cancelled");
+  if (m==1)
+    sprintf(s,"make a new task");
+  else if (m==2)
+    sprintf(s,"report when done/cancelled");
 }
 
 void cdp_free(t_cdp *x)
 {
-	cdp_stop(x);
+  cdp_stop(x);
 }
 
 void *cdp_new(t_symbol *s, long ac, t_atom *av)
 {
-	t_cdp *x;
+  t_cdp *x;
 
-	x = (t_cdp *)object_alloc(cdp_class);
-	x->x_outlet = outlet_new(x,NULL);
+  x = (t_cdp *)object_alloc(cdp_class);
+  x->x_outlet = outlet_new(x,NULL);
   x->cdp_path = gensym("");
-  
+
   attr_args_process(x, ac, av);
   
-	return(x);
+  return(x);
 }
 
 
