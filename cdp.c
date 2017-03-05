@@ -287,6 +287,8 @@ void cdp_do_program(t_cdp *x, char *program, long ac, t_atom *av)
   short path = 0;
   char fullpath[MAX_PATH_CHARS];
   
+  memset(process_output, 1, sizeof(process_output));
+
   if (cdp_find_excutable(x, program, &path, fullpath)) {
     object_error((t_object*)x, "could not find excutable %s", program);
     return;
