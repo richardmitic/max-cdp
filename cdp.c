@@ -70,7 +70,6 @@ void cdp_anything(t_cdp *x, t_symbol *s, long ac, t_atom *av)
   char alloc;
   
   if (atom_alloc_array(ac + 1, &ac_command, &av_command, &alloc) == MAX_ERR_NONE) {
-    x->allocated_memory += sysmem_ptrsize(av_command);
     atom_setsym(av_command, s);
     sysmem_copyptr(av, av_command + 1, sizeof(t_atom) * ac);
     
