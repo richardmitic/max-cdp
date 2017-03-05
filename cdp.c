@@ -6,6 +6,10 @@
 #include "cdptask.h"
 #include "process_osx.h"
 
+#define OVERWRITE_ENABLED  (1)
+#define OVERWRITE_DISABLED (0)
+#define OVERWRITE_DEFAULT  OVERWRITE_ENABLED
+
 
 void cdp_anything(t_cdp *x, t_symbol *s, long ac, t_atom *av);
 void cdp_docdp(t_cdp *x, t_symbol *s, long ac, t_atom *av);
@@ -47,6 +51,8 @@ void ext_main(void *r)
   // Attributes
   CLASS_ATTR_SYM(c, "root", 0, t_cdp, cdp_path);
   CLASS_ATTR_LABEL(c, "root", 0, "CDP directory");
+
+  CLASS_ATTR_LONG(c, "overwrite", 0, t_cdp, overwrite);
 
   class_register(CLASS_BOX,c);
   cdp_class = c;
@@ -199,6 +205,7 @@ void *cdp_new(t_symbol *s, long ac, t_atom *av)
   x = (t_cdp *)object_alloc(cdp_class);
   x->x_outlet = outlet_new(x,NULL);
   x->cdp_path = gensym("");
+  x->overwrite = OVERWRITE_DEFAULT;
 
   attr_args_process(x, ac, av);
   
