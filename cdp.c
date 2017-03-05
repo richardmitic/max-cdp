@@ -251,28 +251,28 @@ t_max_err cdp_make_cmd(t_cdp *x, char *executable, long ac, t_atom *av, t_string
   long argstrsize = 0;
   char *argstr = NULL;
   t_string *cmdstr = NULL;
-  
+
   cmdstr = string_new(executable);
   if (!cmdstr) {
     object_error((t_object*)x, "could not create command string for %s", executable);
     return 1;
   }
-  
+
   string_append(cmdstr, " ");
-  
+
   atom_gettext(ac, av, &argstrsize, &argstr, 0);
   if (!argstr) {
     object_error((t_object*)x, "could not get arguments for %s", string_getptr(cmdstr));
     return 2;
   }
-  
+
   string_append(cmdstr, argstr);
-  
+
   *cmd = cmdstr;
-  
+
   if (argstr)
     sysmem_freeptr(argstr);
-  
+
   return 0;
 }
 
@@ -294,7 +294,6 @@ void cdp_do_program(t_cdp *x, char *program, long ac, t_atom *av)
     post("found excutable %d %s", path, fullpath);
   }
   
-  // Final 2 atoms are for the return code and stdout.
   if (cdp_make_cmd(x, fullpath, ac, av, &cmd)) {
     return;
   }
