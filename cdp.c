@@ -1,7 +1,9 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include "ext.h"
 #include "ext_obex.h"
 #include "ext_systhread.h"
+#include "ext_buffer.h"
 #include "cdp.h"
 #include "cdptask.h"
 #include "process_osx.h"
@@ -26,7 +28,18 @@ void *cdp_new(t_symbol *s, long ac, t_atom *av);
 t_max_err cdp_find_excutable(t_cdp *x, char *name, short *path, char *full_path);
 t_max_err cdp_make_cmd(t_cdp *x, char *executable, long ac, t_atom *av, t_string **cmd);
 void cdp_do_program(t_cdp *x, char *program, long ac, t_atom *av);
+
+t_max_err cdp_substitute_buffers(t_cdp *x, long ac, t_atom *av, t_atom *av_sub, long *subbed);
+t_max_err cdp_reload_output_buffers(t_cdp *x, long ac, t_atom *av, t_atom *av_sub, long *subbed);
+
+
 char *get_filename_ext(char *filename);
+bool array_any(long *arr, long n);
+bool is_cdp_input_buffer(t_symbol *s);
+bool is_cdp_output_buffer(t_symbol *s);
+int write_tmp_wav(t_buffer_ref *buf, t_symbol *filename);
+int delete_existing_file(t_symbol *filename);
+int delete_temporary_wavs(long ac, t_atom *av, long *subbed);
 
 t_class *cdp_class;
 
@@ -291,28 +304,141 @@ void cdp_do_program(t_cdp *x, char *program, long ac, t_atom *av)
   short path = 0;
   char fullpath[MAX_PATH_CHARS];
   
-  memset(process_output, 1, sizeof(process_output));
-
+  // For substituting buffer~s
+  t_atom *av_sub = NULL;
+  long ac_sub = 0;
+  char alloc = 0;
+  long *subbed = NULL;
+  
+  
+  memset(process_output, 0, sizeof(process_output));
+  
   if (cdp_find_excutable(x, program, &path, fullpath)) {
     object_error((t_object*)x, "could not find excutable %s", program);
-    return;
+    goto end;
   } else {
     post("found excutable %d %s", path, fullpath);
   }
   
-  if (cdp_make_cmd(x, fullpath, ac, av, &cmd)) {
-    return;
+  if (ac > 0) {
+    if (atom_alloc_array(ac, &ac_sub, &av_sub, &alloc) != MAX_ERR_NONE)
+      goto end;
+    
+    subbed = (long *)sysmem_newptr(ac * sizeof(long));
+    if (!subbed)
+      goto end;
+    
+    if (cdp_substitute_buffers(x, ac, av, av_sub, subbed) != MAX_ERR_NONE) {
+      goto end;
+    }
+    
+    if (cdp_make_cmd(x, fullpath, ac, av_sub, &cmd)) {
+      goto end;
+    }
+  } else {
+    if (cdp_make_cmd(x, fullpath, ac, av, &cmd)) {
+      goto end;
+    }
   }
   
-  process_return = run_process((char*)string_getptr(cmd), process_output, PROCESS_OUTPUT_MAX_SIZE);
   
+  // Run the program here
+  process_return = run_process((char*)string_getptr(cmd), process_output, PROCESS_OUTPUT_MAX_SIZE);
   atom_setlong(av_out, process_return);
   atom_setsym(av_out+1, gensym(process_output));
-  
   defer_low(x, (method)cdp_taskoutput, gensym("cdpout"), 2, av_out);
   
+  if (ac > 0) {
+    cdp_reload_output_buffers(x, ac, av, av_sub, subbed);
+  }
+  
+end:
+  // FIXME: Files get deleted before the buffer can reload
+//  if (av_sub && subbed)
+//    delete_temporary_wavs(ac, av_sub, subbed);
+  if (av_sub)
+    sysmem_freeptr(av_sub);
+  if (subbed)
+    sysmem_freeptr(subbed);
   if (cmd)
     object_free(cmd);
+}
+
+
+// Find CDP program arguments that are names of Max buffer~ objects and substitute them for temporary wav files.
+// Loop through ac atoms in av, editing the corresponding atom in av_sub if there's a buffer with that name.
+// For each edit, set the corresponding value in subbed to TRUE.
+t_max_err cdp_substitute_buffers(t_cdp *x, long ac, t_atom *av, t_atom *av_sub, long *subbed)
+{
+  t_buffer_ref *ref = NULL;
+  t_symbol *s = NULL;
+  char tmpfilename[MAX_FILENAME_CHARS];
+  int i;
+  
+  if (ac < 1)
+    return MAX_ERR_NONE;
+
+  sysmem_copyptr(av, av_sub, sizeof(t_atom) * ac);
+  memset(subbed, 0, ac * sizeof(long));
+  
+  for(i = 0; i < ac; i++) {
+    if (atom_gettype(&av[i]) == A_SYM) {
+      s = atom_getsym(&av[i]);
+      ref = buffer_ref_new((t_object *)x, s);
+      if (ref) {
+        if (buffer_ref_exists(ref)) {
+          get_tmp_file_name(tmpfilename, sizeof(tmpfilename), s->s_name);
+          atom_setsym(&av_sub[i], gensym(tmpfilename));
+          subbed[i] = 1;
+          
+          if (is_cdp_input_buffer(s)) {
+            if(write_tmp_wav(ref, gensym(tmpfilename))) return MAX_ERR_GENERIC;
+          } else if(is_cdp_output_buffer(s)) {
+            if(delete_existing_file(gensym(tmpfilename))) return MAX_ERR_GENERIC;
+          }
+        }
+        object_free(ref);
+      }
+    }
+  }
+
+  return MAX_ERR_NONE;
+}
+
+
+
+static void load_file_into_buffer(t_object *x, t_symbol *filename, t_symbol *buffername)
+{
+  t_buffer_ref *bufferref = NULL;
+  t_buffer_obj *buffer = NULL;
+  t_atom a_ret;
+  
+  if ((bufferref = buffer_ref_new(x, buffername))) {
+    if ((buffer = buffer_ref_getobject(bufferref))) {
+      object_method_sym(buffer, gensym("replace"), filename, &a_ret);
+    }
+    object_free(bufferref);
+  }
+}
+
+// After processing, load output wavs into their corresponding buffers
+t_max_err cdp_reload_output_buffers(t_cdp *x, long ac, t_atom *av, t_atom *av_sub, long *subbed)
+{
+  
+  t_symbol *filename = NULL, *buffername = NULL;
+  int i;
+  
+  for (i = 0; i < ac; i++) {
+    if (subbed[i]) {
+      filename = atom_getsym(&av_sub[i]);
+      buffername = atom_getsym(&av[i]);
+      if (is_cdp_output_buffer(buffername)) {
+        load_file_into_buffer((t_object*)x, filename, buffername);
+      }
+    }
+  }
+  
+  return MAX_ERR_NONE;
 }
 
 
@@ -322,6 +448,75 @@ char *get_filename_ext(char *filename)
   if(!dot || dot == filename) return "";
   return dot + 1;
 }
+
+
+bool array_any(long *arr, long n)
+{
+  long result = 0, i = n;
+  while(--i) {
+    result = result || arr[i];
+  }
+  return result;
+}
+
+
+bool is_cdp_input_buffer(t_symbol *s)
+{
+  return !memcmp(s->s_name, CDP_INPUT_PREFIX, CDP_INPUT_PREFIX_SIZE);
+}
+
+bool is_cdp_output_buffer(t_symbol *s)
+{
+  return !memcmp(s->s_name, CDP_OUTPUT_PREFIX, CDP_OUTPUT_PREFIX_SIZE);
+}
+
+
+int write_tmp_wav(t_buffer_ref *ref, t_symbol *filename)
+{
+  t_buffer_obj *buffer = NULL;
+  t_atom a_ret;
+  
+  buffer = buffer_ref_getobject(ref);
+  object_method_sym(buffer, gensym("writewave"), filename, &a_ret);
+  
+  return 0;
+}
+
+
+int delete_existing_file(t_symbol *filename)
+{
+  int ret = 0;
+  
+  ret = unlink(filename->s_name);
+  if (ret && errno != ENOENT) { // Ignore "file doesn't exist" error
+    error("Cannot delete file %s, error %d \"%s\"", filename->s_name, errno, strerror(errno));
+    return errno;
+  }
+  
+  return 0;
+}
+
+
+int delete_temporary_wavs(long ac, t_atom *av, long *subbed)
+{
+  int i, ret=0;
+  
+  for (i = 0; i < ac; i++) {
+    if (subbed[i] && (ret = delete_existing_file(atom_getsym(&av[i])))) {
+      return ret;
+    }
+  }
+  
+  return 0;
+}
+
+
+
+
+
+
+
+
 
 
 

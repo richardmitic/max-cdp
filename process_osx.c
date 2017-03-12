@@ -23,3 +23,12 @@ int run_process(char *cmd, char *stdout, int stdout_size)
   fread(stdout, sizeof(char), stdout_size, process);
   return pclose(process);
 }
+
+
+int get_tmp_file_name(char *buf, int buflen, char *prefix)
+{
+  char tmp[MAX_PATH_CHARS];
+  
+  snprintf_zero(tmp, buflen, "~/%s.wav", prefix);
+  return path_nameconform(tmp, buf, PATH_STYLE_NATIVE, PATH_TYPE_BOOT);
+}
