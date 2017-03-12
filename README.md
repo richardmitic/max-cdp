@@ -2,7 +2,7 @@
 A MaxMSP frontend for the [Composers Desktop Project](http://www.unstablesound.net/cdp.html)
 
 ## Info
-Based on the the "threadpool" example object in the Max SDK.
+Based on the "threadpool" example object in the Max SDK.
 
 ### Building 
 Clone the [Max SDK](https://github.com/Cycling74/max-sdk), then clone this repo in `source/advanced`. Build with Xcode. Make sure the `externals` directory is added to the Max search path.
