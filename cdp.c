@@ -175,7 +175,6 @@ void cdp_taskcomplete(t_cdp *x, t_symbol *s, long ac, t_atom *av)
   post("cdp background task (%s) completed in thread %x",tmpstr,systhread_self());
 
   defer_low(x, (method)cdp_taskoutput, gensym("taskoutput"), ac, av);
-  //schedule_delay(x,(method)cdp_taskoutput,gensym("taskoutput"),ac,av);
 
   if (tmpstr)
     sysmem_freeptr(tmpstr);
