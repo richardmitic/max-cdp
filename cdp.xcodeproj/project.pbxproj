@@ -12,7 +12,6 @@
 		438B6FF912A3BBEE00CE4FFE /* cdptask.h in Headers */ = {isa = PBXBuildFile; fileRef = 438B6FF812A3BBEE00CE4FFE /* cdptask.h */; };
 		796BCF121E64E16D00F58068 /* process_osx.c in Sources */ = {isa = PBXBuildFile; fileRef = 796BCF101E64E16D00F58068 /* process_osx.c */; };
 		796BCF131E64E16D00F58068 /* process_osx.h in Headers */ = {isa = PBXBuildFile; fileRef = 796BCF111E64E16D00F58068 /* process_osx.h */; };
-		796BCF241E67820F00F58068 /* generated_sources in Resources */ = {isa = PBXBuildFile; fileRef = 796BCF231E67820F00F58068 /* generated_sources */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,7 +23,6 @@
 		796BCF101E64E16D00F58068 /* process_osx.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = process_osx.c; sourceTree = "<group>"; };
 		796BCF111E64E16D00F58068 /* process_osx.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = process_osx.h; sourceTree = "<group>"; };
 		796BCF1A1E6602A000F58068 /* cdp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = cdp.h; sourceTree = "<group>"; };
-		796BCF231E67820F00F58068 /* generated_sources */ = {isa = PBXFileReference; lastKnownFileType = folder; name = generated_sources; path = "/Users/richard/Developer/max-sdk/source/advanced/cdp/generated_sources"; sourceTree = "<absolute>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -135,7 +133,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				796BCF241E67820F00F58068 /* generated_sources in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
