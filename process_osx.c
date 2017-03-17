@@ -27,8 +27,15 @@ int run_process(char *cmd, char *stdout, int stdout_size)
 
 int get_tmp_file_name(char *buf, int buflen, char *prefix)
 {
-  char tmp[MAX_PATH_CHARS];
+  char tmp[MAX_PATH_CHARS+5];
+  char suffix[5] = {'.','w','a','v', NULL};
+  char *end;
+
+  if(path_toabsolutesystempath(path_getdefault(), prefix, tmp) != MAX_ERR_NONE) {
+    return -1;
+  }
+  end = strchr(tmp, NULL);
+  sysmem_copyptr(suffix, end, 5);
   
-  snprintf_zero(tmp, buflen, "~/%s.wav", prefix);
   return path_nameconform(tmp, buf, PATH_STYLE_NATIVE, PATH_TYPE_BOOT);
 }
