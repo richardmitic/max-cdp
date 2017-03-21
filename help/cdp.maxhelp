@@ -95,6 +95,32 @@
 						"showontab" : 1,
 						"boxes" : [ 							{
 								"box" : 								{
+									"buffername" : "cdpout",
+									"id" : "obj-7",
+									"maxclass" : "waveform~",
+									"numinlets" : 5,
+									"numoutlets" : 6,
+									"outlettype" : [ "float", "float", "float", "float", "list", "" ],
+									"patching_rect" : [ 39.0, 411.0, 252.0, 45.0 ],
+									"style" : ""
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"buffername" : "cdpin",
+									"id" : "obj-8",
+									"maxclass" : "waveform~",
+									"numinlets" : 5,
+									"numoutlets" : 6,
+									"outlettype" : [ "float", "float", "float", "float", "list", "" ],
+									"patching_rect" : [ 39.0, 361.0, 252.0, 45.0 ],
+									"style" : ""
+								}
+
+							}
+, 							{
+								"box" : 								{
 									"id" : "obj-3",
 									"maxclass" : "message",
 									"numinlets" : 2,
@@ -138,21 +164,9 @@
 									"numinlets" : 6,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 56.0, 111.0, 476.0, 22.0 ],
+									"patching_rect" : [ 56.0, 111.0, 267.0, 22.0 ],
 									"style" : "",
-									"text" : "pack distort omit __CDPIN_hello_buffer __CDPOUT_goodbye_buffer breakpoints.txt 16"
-								}
-
-							}
-, 							{
-								"box" : 								{
-									"id" : "obj-82",
-									"maxclass" : "newobj",
-									"numinlets" : 1,
-									"numoutlets" : 0,
-									"patching_rect" : [ 247.0, 524.0, 76.0, 22.0 ],
-									"style" : "",
-									"text" : "s hello_read"
+									"text" : "pack distort omit cdpin cdpout breakpoints.txt 16"
 								}
 
 							}
@@ -179,7 +193,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "bang" ],
-									"patching_rect" : [ 543.0, 411.0, 24.0, 24.0 ],
+									"patching_rect" : [ 405.0, 376.0, 24.0, 24.0 ],
 									"style" : ""
 								}
 
@@ -191,7 +205,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 399.0, 413.0, 33.0, 22.0 ],
+									"patching_rect" : [ 370.0, 376.0, 33.0, 22.0 ],
 									"style" : "",
 									"text" : "stop"
 								}
@@ -400,38 +414,12 @@
 							}
 , 							{
 								"box" : 								{
-									"buffername" : "__CDPOUT_goodbye_buffer",
-									"id" : "obj-37",
-									"maxclass" : "waveform~",
-									"numinlets" : 5,
-									"numoutlets" : 6,
-									"outlettype" : [ "float", "float", "float", "float", "list", "" ],
-									"patching_rect" : [ 39.0, 411.0, 252.0, 45.0 ],
-									"style" : ""
-								}
-
-							}
-, 							{
-								"box" : 								{
-									"buffername" : "__CDPIN_hello_buffer",
-									"id" : "obj-34",
-									"maxclass" : "waveform~",
-									"numinlets" : 5,
-									"numoutlets" : 6,
-									"outlettype" : [ "float", "float", "float", "float", "list", "" ],
-									"patching_rect" : [ 39.0, 361.0, 252.0, 45.0 ],
-									"style" : ""
-								}
-
-							}
-, 							{
-								"box" : 								{
 									"id" : "obj-36",
 									"maxclass" : "message",
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 568.0, 489.0, 34.0, 22.0 ],
+									"patching_rect" : [ 415.0, 426.0, 34.0, 22.0 ],
 									"style" : "",
 									"text" : "start"
 								}
@@ -444,7 +432,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 506.0, 459.0, 34.0, 22.0 ],
+									"patching_rect" : [ 329.0, 426.0, 34.0, 22.0 ],
 									"style" : "",
 									"text" : "start"
 								}
@@ -456,7 +444,7 @@
 									"maxclass" : "ezdac~",
 									"numinlets" : 2,
 									"numoutlets" : 0,
-									"patching_rect" : [ 329.0, 569.0, 45.0, 45.0 ],
+									"patching_rect" : [ 358.0, 529.0, 45.0, 45.0 ],
 									"style" : ""
 								}
 
@@ -468,9 +456,9 @@
 									"numinlets" : 1,
 									"numoutlets" : 2,
 									"outlettype" : [ "signal", "bang" ],
-									"patching_rect" : [ 355.0, 489.0, 207.0, 22.0 ],
+									"patching_rect" : [ 415.0, 459.0, 89.0, 22.0 ],
 									"style" : "",
-									"text" : "play~ __CDPOUT_goodbye_buffer 1"
+									"text" : "play~ cdpout 1"
 								}
 
 							}
@@ -481,61 +469,22 @@
 									"numinlets" : 1,
 									"numoutlets" : 2,
 									"outlettype" : [ "signal", "bang" ],
-									"patching_rect" : [ 329.0, 459.0, 173.0, 22.0 ],
+									"patching_rect" : [ 329.0, 459.0, 82.0, 22.0 ],
 									"style" : "",
-									"text" : "play~ __CDPIN_hello_buffer 1"
-								}
-
-							}
-, 							{
-								"box" : 								{
-									"id" : "obj-27",
-									"maxclass" : "newobj",
-									"numinlets" : 1,
-									"numoutlets" : 1,
-									"outlettype" : [ "bang" ],
-									"patching_rect" : [ 39.0, 465.0, 60.0, 22.0 ],
-									"style" : "",
-									"text" : "loadbang"
-								}
-
-							}
-, 							{
-								"box" : 								{
-									"id" : "obj-26",
-									"maxclass" : "newobj",
-									"numinlets" : 1,
-									"numoutlets" : 2,
-									"outlettype" : [ "float", "bang" ],
-									"patching_rect" : [ 39.0, 554.0, 235.0, 22.0 ],
-									"style" : "",
-									"text" : "buffer~ __CDPOUT_goodbye_buffer 1000"
-								}
-
-							}
-, 							{
-								"box" : 								{
-									"id" : "obj-22",
-									"maxclass" : "newobj",
-									"numinlets" : 1,
-									"numoutlets" : 2,
-									"outlettype" : [ "float", "bang" ],
-									"patching_rect" : [ 39.0, 524.0, 201.0, 22.0 ],
-									"style" : "",
-									"text" : "buffer~ __CDPIN_hello_buffer 1000"
+									"text" : "play~ cdpin 1"
 								}
 
 							}
 , 							{
 								"box" : 								{
 									"id" : "obj-15",
-									"linecount" : 6,
+									"linecount" : 9,
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 114.0, 222.0, 147.0, 87.0 ],
+									"patching_rect" : [ 114.0, 222.0, 147.0, 127.0 ],
 									"style" : "",
-									"text" : "\r0 min  0.00 sec\r0 min  0.00 sec\r0 min  5.94 sec\r0 min  8.86 sec\n\n"
+									"text" : "ERROR: INVALID DATA\nERROR: Cannot open output file /Users/richard/Developer/max-sdk/source/advanced/cdp/help/__CDPOUT_goodbye_buffer.wav\n\n\n"
 								}
 
 							}
@@ -562,19 +511,6 @@
 									"patching_rect" : [ 56.0, 157.0, 259.0, 22.0 ],
 									"style" : "",
 									"text" : "cdp @root /Users/richard/cdpr7/_cdp/_cdprogs"
-								}
-
-							}
-, 							{
-								"box" : 								{
-									"id" : "obj-8",
-									"maxclass" : "message",
-									"numinlets" : 2,
-									"numoutlets" : 1,
-									"outlettype" : [ "" ],
-									"patching_rect" : [ 39.0, 494.0, 102.0, 22.0 ],
-									"style" : "",
-									"text" : "replace duduk.aif"
 								}
 
 							}
@@ -618,24 +554,6 @@
 									"hidden" : 0,
 									"order" : 1,
 									"source" : [ "obj-16", 0 ]
-								}
-
-							}
-, 							{
-								"patchline" : 								{
-									"destination" : [ "obj-82", 0 ],
-									"disabled" : 0,
-									"hidden" : 0,
-									"source" : [ "obj-22", 1 ]
-								}
-
-							}
-, 							{
-								"patchline" : 								{
-									"destination" : [ "obj-8", 0 ],
-									"disabled" : 0,
-									"hidden" : 0,
-									"source" : [ "obj-27", 0 ]
 								}
 
 							}
@@ -785,15 +703,6 @@
 									"disabled" : 0,
 									"hidden" : 0,
 									"source" : [ "obj-71", 0 ]
-								}
-
-							}
-, 							{
-								"patchline" : 								{
-									"destination" : [ "obj-22", 0 ],
-									"disabled" : 0,
-									"hidden" : 0,
-									"source" : [ "obj-8", 0 ]
 								}
 
 							}
@@ -1584,7 +1493,7 @@
 							"modernui" : 1
 						}
 ,
-						"rect" : [ 0.0, 26.0, 1212.0, 656.0 ],
+						"rect" : [ 34.0, 105.0, 1212.0, 656.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -1614,6 +1523,107 @@
 						"showontab" : 1,
 						"boxes" : [ 							{
 								"box" : 								{
+									"id" : "obj-40",
+									"maxclass" : "button",
+									"numinlets" : 1,
+									"numoutlets" : 1,
+									"outlettype" : [ "bang" ],
+									"patching_rect" : [ 435.0, 406.0, 24.0, 24.0 ],
+									"style" : ""
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"id" : "obj-38",
+									"maxclass" : "message",
+									"numinlets" : 2,
+									"numoutlets" : 1,
+									"outlettype" : [ "" ],
+									"patching_rect" : [ 400.0, 406.0, 33.0, 22.0 ],
+									"style" : "",
+									"text" : "stop"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"id" : "obj-36",
+									"maxclass" : "message",
+									"numinlets" : 2,
+									"numoutlets" : 1,
+									"outlettype" : [ "" ],
+									"patching_rect" : [ 445.0, 456.0, 34.0, 22.0 ],
+									"style" : "",
+									"text" : "start"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"id" : "obj-35",
+									"maxclass" : "message",
+									"numinlets" : 2,
+									"numoutlets" : 1,
+									"outlettype" : [ "" ],
+									"patching_rect" : [ 359.0, 456.0, 34.0, 22.0 ],
+									"style" : "",
+									"text" : "start"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"id" : "obj-33",
+									"maxclass" : "ezdac~",
+									"numinlets" : 2,
+									"numoutlets" : 0,
+									"patching_rect" : [ 388.0, 559.0, 45.0, 45.0 ],
+									"style" : ""
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"id" : "obj-32",
+									"maxclass" : "newobj",
+									"numinlets" : 1,
+									"numoutlets" : 2,
+									"outlettype" : [ "signal", "bang" ],
+									"patching_rect" : [ 445.0, 489.0, 89.0, 22.0 ],
+									"style" : "",
+									"text" : "play~ cdpout 1"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"id" : "obj-28",
+									"maxclass" : "newobj",
+									"numinlets" : 1,
+									"numoutlets" : 2,
+									"outlettype" : [ "signal", "bang" ],
+									"patching_rect" : [ 359.0, 489.0, 82.0, 22.0 ],
+									"style" : "",
+									"text" : "play~ cdpin 1"
+								}
+
+							}
+, 							{
+								"box" : 								{
+									"id" : "obj-3",
+									"maxclass" : "message",
+									"numinlets" : 2,
+									"numoutlets" : 1,
+									"outlettype" : [ "" ],
+									"patching_rect" : [ 96.5, 50.0, 206.0, 22.0 ],
+									"style" : "",
+									"text" : "reverb cdpin cdpout 0.7 0.7 2 0.5 0 5"
+								}
+
+							}
+, 							{
+								"box" : 								{
 									"id" : "obj-83",
 									"linecount" : 2,
 									"maxclass" : "comment",
@@ -1621,7 +1631,7 @@
 									"numoutlets" : 0,
 									"patching_rect" : [ 357.0, 211.0, 259.0, 33.0 ],
 									"style" : "",
-									"text" : "Buffers that will be output files from CDP must have names beginning with \"__CDPOUT\""
+									"text" : "Buffers that will be output files from CDP must have names beginning with \"cdpout\""
 								}
 
 							}
@@ -1634,7 +1644,7 @@
 									"numoutlets" : 0,
 									"patching_rect" : [ 357.0, 166.0, 251.0, 33.0 ],
 									"style" : "",
-									"text" : "Buffers that will be input files to CDP must have names beginning with \"__CDPIN\""
+									"text" : "Buffers that will be input files to CDP must have names beginning with \"cdpin\""
 								}
 
 							}
@@ -1644,34 +1654,9 @@
 									"maxclass" : "newobj",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 247.0, 524.0, 76.0, 22.0 ],
+									"patching_rect" : [ 170.5, 524.0, 76.0, 22.0 ],
 									"style" : "",
 									"text" : "s hello_read"
-								}
-
-							}
-, 							{
-								"box" : 								{
-									"id" : "obj-40",
-									"maxclass" : "button",
-									"numinlets" : 1,
-									"numoutlets" : 1,
-									"outlettype" : [ "bang" ],
-									"patching_rect" : [ 543.0, 411.0, 24.0, 24.0 ],
-									"style" : ""
-								}
-
-							}
-, 							{
-								"box" : 								{
-									"id" : "obj-38",
-									"maxclass" : "message",
-									"numinlets" : 2,
-									"numoutlets" : 1,
-									"outlettype" : [ "" ],
-									"patching_rect" : [ 399.0, 413.0, 33.0, 22.0 ],
-									"style" : "",
-									"text" : "stop"
 								}
 
 							}
@@ -1917,7 +1902,7 @@
 							}
 , 							{
 								"box" : 								{
-									"buffername" : "__CDPOUT_goodbye_buffer",
+									"buffername" : "cdpout",
 									"id" : "obj-37",
 									"maxclass" : "waveform~",
 									"numinlets" : 5,
@@ -1930,7 +1915,7 @@
 							}
 , 							{
 								"box" : 								{
-									"buffername" : "__CDPIN_hello_buffer",
+									"buffername" : "cdpin",
 									"id" : "obj-34",
 									"maxclass" : "waveform~",
 									"numinlets" : 5,
@@ -1938,69 +1923,6 @@
 									"outlettype" : [ "float", "float", "float", "float", "list", "" ],
 									"patching_rect" : [ 39.0, 361.0, 252.0, 45.0 ],
 									"style" : ""
-								}
-
-							}
-, 							{
-								"box" : 								{
-									"id" : "obj-36",
-									"maxclass" : "message",
-									"numinlets" : 2,
-									"numoutlets" : 1,
-									"outlettype" : [ "" ],
-									"patching_rect" : [ 567.0, 490.0, 34.0, 22.0 ],
-									"style" : "",
-									"text" : "start"
-								}
-
-							}
-, 							{
-								"box" : 								{
-									"id" : "obj-35",
-									"maxclass" : "message",
-									"numinlets" : 2,
-									"numoutlets" : 1,
-									"outlettype" : [ "" ],
-									"patching_rect" : [ 506.0, 459.0, 34.0, 22.0 ],
-									"style" : "",
-									"text" : "start"
-								}
-
-							}
-, 							{
-								"box" : 								{
-									"id" : "obj-33",
-									"maxclass" : "ezdac~",
-									"numinlets" : 2,
-									"numoutlets" : 0,
-									"patching_rect" : [ 329.0, 569.0, 45.0, 45.0 ],
-									"style" : ""
-								}
-
-							}
-, 							{
-								"box" : 								{
-									"id" : "obj-32",
-									"maxclass" : "newobj",
-									"numinlets" : 1,
-									"numoutlets" : 2,
-									"outlettype" : [ "signal", "bang" ],
-									"patching_rect" : [ 355.0, 490.0, 207.0, 22.0 ],
-									"style" : "",
-									"text" : "play~ __CDPOUT_goodbye_buffer 1"
-								}
-
-							}
-, 							{
-								"box" : 								{
-									"id" : "obj-28",
-									"maxclass" : "newobj",
-									"numinlets" : 1,
-									"numoutlets" : 2,
-									"outlettype" : [ "signal", "bang" ],
-									"patching_rect" : [ 329.0, 459.0, 173.0, 22.0 ],
-									"style" : "",
-									"text" : "play~ __CDPIN_hello_buffer 1"
 								}
 
 							}
@@ -2024,9 +1946,9 @@
 									"numinlets" : 1,
 									"numoutlets" : 2,
 									"outlettype" : [ "float", "bang" ],
-									"patching_rect" : [ 39.0, 554.0, 235.0, 22.0 ],
+									"patching_rect" : [ 39.0, 554.0, 117.0, 22.0 ],
 									"style" : "",
-									"text" : "buffer~ __CDPOUT_goodbye_buffer 1000"
+									"text" : "buffer~ cdpout 1000"
 								}
 
 							}
@@ -2037,9 +1959,9 @@
 									"numinlets" : 1,
 									"numoutlets" : 2,
 									"outlettype" : [ "float", "bang" ],
-									"patching_rect" : [ 39.0, 524.0, 201.0, 22.0 ],
+									"patching_rect" : [ 39.0, 524.0, 110.0, 22.0 ],
 									"style" : "",
-									"text" : "buffer~ __CDPIN_hello_buffer 1000"
+									"text" : "buffer~ cdpin 1000"
 								}
 
 							}
@@ -2065,9 +1987,9 @@
 									"numinlets" : 7,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 56.0, 110.0, 451.0, 22.0 ],
+									"patching_rect" : [ 56.0, 110.0, 242.0, 22.0 ],
 									"style" : "",
-									"text" : "pack distort telescope __CDPIN_hello_buffer __CDPOUT_goodbye_buffer 3 -s0 -a"
+									"text" : "pack distort telescope cdpin cdpout 3 -s0 -a"
 								}
 
 							}
@@ -2086,13 +2008,11 @@
 , 							{
 								"box" : 								{
 									"id" : "obj-15",
-									"linecount" : 5,
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 114.0, 222.0, 147.0, 74.0 ],
-									"style" : "",
-									"text" : "\r0 min  0.00 sec\r0 min  0.00 sec\r0 min  4.77 sec\n\n"
+									"patching_rect" : [ 114.0, 222.0, 147.0, 20.0 ],
+									"style" : ""
 								}
 
 							}
@@ -2205,6 +2125,15 @@
 									"disabled" : 0,
 									"hidden" : 0,
 									"source" : [ "obj-29", 0 ]
+								}
+
+							}
+, 							{
+								"patchline" : 								{
+									"destination" : [ "obj-1", 0 ],
+									"disabled" : 0,
+									"hidden" : 0,
+									"source" : [ "obj-3", 0 ]
 								}
 
 							}
@@ -2509,7 +2438,7 @@
  ],
 		"dependency_cache" : [ 			{
 				"name" : "cdp.breakpoints.maxpat",
-				"bootpath" : "~/Documents/Max 7/Library",
+				"bootpath" : "~/Developer/max-sdk/source/advanced/cdp/help",
 				"type" : "JSON",
 				"implicit" : 1
 			}
